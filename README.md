@@ -1,6 +1,6 @@
 # cli-api-mocker
 
-CLI wrapper for [connect-api-mocker](muratcorlu/connect-api-mocker)
+CLI wrapper for [connect-api-mocker](https://github.com/muratcorlu/connect-api-mocker)
 
 ## Installation
 
@@ -10,7 +10,7 @@ npm i -g cli-api-mocker
 
 ## Usage
 
-After you created your mock files like defined in [connect-api-mocker documents](muratcorlu/connect-api-mocker) you can simply start your mock server with running `mockit` command inside the root folder of your mocks:
+After you created your mock files like defined in [connect-api-mocker documents](https://github.com/muratcorlu/connect-api-mocker) you can simply start your mock server with running `mockit` command inside the root folder of your mocks:
 
 ```sh
 $ mockit
@@ -49,7 +49,7 @@ module.exports = {
 }
 ```
 
-Proxy definition object is a [http-proxy-middleware](chimurai/http-proxy-middleware) options object. So you can take advantage of all options of http-proxy-middleware library here. Here a more detailed proxy definition example:
+Proxy definition object is a [http-proxy-middleware](https://github.com/chimurai/http-proxy-middleware) options object. So you can take advantage of all options of http-proxy-middleware library here. Here a more detailed proxy definition example:
 
 ```js
 module.exports = {
