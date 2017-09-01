@@ -54,7 +54,7 @@ app.use(cors())
 app.use(bodyParser.json())
 
 for(var path in config.map) {
-    console.log(path);
+
     var conf = config.map[path];
 
     if (conf.proxy) {
