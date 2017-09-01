@@ -4,20 +4,46 @@ var express = require('express');
 var apiMocker = require('connect-api-mocker');
 var bodyParser = require('body-parser')
 var proxy = require('http-proxy-middleware');
-var cors = require('cors')
+var cors = require('cors');
+var commandLineArgs = require('command-line-args');
+var defaultPortValue = 9000;
+var defaultFromPathValue = '/';
+var defaultToPathValue = '';
+var optionDefinitions = [
+ { name: 'port', alias: 'p', type: Number, defaultValue: defaultPortValue },
+ { name: 'fromPath', alias: 'f', type: String, defaultValue: defaultFromPathValue },
+ { name: 'toPath', alias: 't', type: String, defaultValue: defaultToPathValue }
+];
+
+var options = commandLineArgs(optionDefinitions);
 
 var app = express();
 
-var config = {
-    port: 9090,
-    map: {
-        '/': '.'
-    }
+var mapping = {};
+
+mapping[options.fromPath] = options.toPath;
+
+var  defaultConfig = {
+    port: options.port,
+    map: mapping
 };
+var config = defaultConfig;
 
 try {
-    config = require(path.resolve(process.cwd() , 'mock.config.js'));
+    var loadedConfig = require(path.resolve(process.cwd() , 'mock.config.js'));
     console.log('Config file found mocking!');
+
+    if (config.port === defaultPortValue && loadedConfig.port) {
+        config.port = loadedConfig.port;
+    }
+
+    var mapKeys = Object.keys(config.map);
+    if (loadedConfig.map) {
+        mapKeys.forEach(function (mapKey) {
+            loadedConfig.map[mapKey] = config.map[mapKey];
+        });
+        congig.map = loadedConfig.map;
+    }
 } catch (error) {
     // there is no config
 }
@@ -27,6 +53,7 @@ app.use(cors())
 app.use(bodyParser.json())
 
 for(var path in config.map) {
+    console.log(path);
     var conf = config.map[path];
 
     if (conf.proxy) {
