@@ -18,7 +18,33 @@ $ mockit
 
 That command will start to serve your mocks on port `9090` by default.
 
-## Configuration
+## Arguments
+
+`mockit` command has 3 available arguments. 
+
+    [-p | --port]     with default value `9090`, 
+    [-f | --fromPath] with default value `/`,
+    [-t | --toPath]   with default value ``
+
+These arguments are optional. You can use `mockit` command with any one of them or any combination of them.
+
+You can see usage examples below:
+
+`mockit --port=8989` or  `mockit -p 8989` for running on port `8989` instead of default port `9090`
+`mockit --fromPath=/api` or  `mockit -f '/api'` for running listening paths from `/api` instead from default path ``
+`mockit --toPath=/mapi` or  `mockit -t '/mapi'` for forwarding to path `/api` instead of forwarding to default path `/`
+
+Or you can combine any of them like:
+
+`mockit --port=8989 --fromPath=/api --toPath=/mapi` 
+
+Or 
+
+`mockit -p 8989 -f '/api -t '/mapi'`
+
+**Note:** In next title you will notice config file. If there is a config file, config file will be active. But command line arguments are stronger. So if you use both of them together, command line arguments will override config file.
+
+## Configuration with a config file
 
 You can set your configuration with file `mock.config.js` file in the root of your project directory.
 
