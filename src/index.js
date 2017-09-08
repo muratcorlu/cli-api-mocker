@@ -42,7 +42,7 @@ try {
         mapKeys.forEach(function (mapKey) {
             loadedConfig.map[mapKey] = config.map[mapKey];
         });
-        congig.map = loadedConfig.map;
+        config.map = loadedConfig.map;
     }
 } catch (error) {
     // there is no config
