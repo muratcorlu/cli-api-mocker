@@ -1,3 +1,9 @@
+## 1.0.3 (2018-01-12)
+
+### Features:
+
+- Body parser removed from cli-connect-mocker. Because from v 1.3.5, connect-api-mocker supports parsing json requests internally.
+
 ## 1.0.2 (2017-09-08)
 
 ### Features:

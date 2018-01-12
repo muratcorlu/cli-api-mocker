@@ -50,9 +50,6 @@ try {
 
 app.use(cors())
 
-// TOOD: Multipart request support https://github.com/muratcorlu/cli-api-mocker/issues/1
-app.use(bodyParser.json())
-
 for(var path in config.map) {
 
     var conf = config.map[path];
@@ -69,15 +66,6 @@ for(var path in config.map) {
         if (typeof conf.proxy == 'string') {
             config.proxy = {
                 target: conf.proxy
-            }
-        }
-        conf.proxy.onProxyReq = function (proxyReq, req, res, options) {
-            if(req.body) {
-                // TOOD: Multipart request support https://github.com/muratcorlu/cli-api-mocker/issues/1
-                var bodyData = JSON.stringify(req.body);
-                proxyReq.setHeader('Content-Type','application/json');
-                proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
-                proxyReq.write(bodyData);
             }
         }
         app.use(path, proxy(conf.proxy));
