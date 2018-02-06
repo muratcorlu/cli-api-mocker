@@ -20,11 +20,13 @@ That command will start to serve your mocks on port `9090` by default.
 
 ## Arguments
 
-`mockit` command has 3 available arguments. 
+`mockit` command has 4 available arguments.
 
-    [-p | --port]     with default value `9090`, 
+    [-p | --port]     with default value `9090`,
     [-f | --fromPath] with default value `/`,
     [-t | --toPath]   with default value ``
+    [-c | --capture]   with default value `false`
+    [-v | --verbose]   with default value `false`
 
 These arguments are optional. You can use `mockit` command with any one of them or any combination of them.
 
@@ -36,9 +38,9 @@ You can see usage examples below:
 
 Or you can combine any of them like:
 
-`mockit --port=8989 --fromPath=/api --toPath=/mapi` 
+`mockit --port=8989 --fromPath=/api --toPath=/mapi`
 
-Or 
+Or
 
 `mockit -p 8989 -f '/api -t '/mapi'`
 
@@ -95,4 +97,23 @@ module.exports = {
     }
 }
 ```
+
+### Capture mode
+
+With capture mode, you can automatically create mock files from your api origin responses over proxy. You can enable capture mode by `--capture` (or `-c`) command line parameter or `capture` property in config file:
+
+```js
+module.exports = {
+    port: 9090,
+    map: {
+        '/api': {
+            target: 'mocks/api',
+            proxy: 'https://api.yourdomain.com',
+            capture: true
+        }
+    }
+}
+```
+
+When capture mode enabled, if you don't have a mock file for a request and if you have a proxy definition, a mock file will automatically generated for you for successful responses from your origin.
 

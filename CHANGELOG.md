@@ -1,3 +1,10 @@
+## 1.0.4 (2018-02-06)
+
+### Features:
+
+- **Capture Mode**: Now you can automatically generate mock files from your api responses.
+- **Verbose Mode**: `--verbose` cli parameter added to use verbose mode of connect-api-mocker.
+
 ## 1.0.3 (2018-01-12)
 
 ### Features:
