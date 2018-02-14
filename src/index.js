@@ -2,40 +2,43 @@
 var path = require('path');
 var express = require('express');
 var apiMocker = require('connect-api-mocker');
-var bodyParser = require('body-parser')
 var proxy = require('http-proxy-middleware');
 var cors = require('cors');
 var fs = require('fs');
 var pth = require('path');
 var mkdirp = require('mkdirp');
-var commandLineArgs = require('command-line-args');
 var defaultPortValue = 9090;
 var defaultFromPathValue = '/';
 var defaultToPathValue = '';
-var optionDefinitions = [
- { name: 'port', alias: 'p', type: Number, defaultValue: defaultPortValue },
- { name: 'fromPath', alias: 'f', type: String, defaultValue: defaultFromPathValue },
- { name: 'toPath', alias: 't', type: String, defaultValue: defaultToPathValue },
- { name: 'capture', alias: 'c', type: Boolean, defaultValue: false },
- { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false }
-];
+
+var program = require('commander');
+var package = require('../package.json');
+
+program
+  .description('mockit is a tool for creating a mocks for a REST API.')
+  .version(package.version)
+  .option('-p, --port <port>', 'Port number to serve mocks', parseInt, defaultPortValue)
+  .option('-f, --from-path <path>', 'Target url path for mocking', defaultFromPathValue)
+  .option('-t, --to-path <path>', 'Target folder path for mocks', defaultToPathValue)
+  .option('-c, --capture', 'Enable capture mode')
+  .option('-v, --verbose', 'Enable verbose mode')
+  .option('-d, --disable-mocks', 'Temporary disable mocks to just use proxy')
+  .parse(process.argv);
 
 function escapeRegExp(str) {
   return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
 }
 
-var options = commandLineArgs(optionDefinitions);
-
 var app = express();
 
 var mapping = {};
 
-mapping[options.fromPath] = {
-  target: options.toPath
+mapping[program.fromPath] = {
+  target: program.toPath
 };
 
 var  defaultConfig = {
-  port: options.port,
+  port: program.port,
   map: mapping
 };
 var config = defaultConfig;
@@ -59,7 +62,7 @@ try {
   // there is no config
 }
 
-if (options.verbose) {
+if (program.verbose) {
   Object.keys(config.map).forEach(function (key) {
     config.map[key].verbose = true;
   });
@@ -73,12 +76,12 @@ for(var path in config.map) {
 
     if (conf.proxy) {
       conf.nextOnNotFound = true;
-    }
 
-    app.use(basePath, apiMocker(conf));
-    console.log(`Mocking enabled: ${basePath} => ${conf.target || conf}`);
+      if (!conf.disableMocks) {
+        app.use(basePath, apiMocker(conf));
+        console.log(`Mocking enabled: ${basePath} => ${conf.target || conf}`);
+      }
 
-    if (conf.proxy) {
       console.log(`Proxy enabled: ${basePath} => ${conf.proxy}`);
       if (typeof conf.proxy == 'string') {
         conf.proxy = {
@@ -86,7 +89,7 @@ for(var path in config.map) {
         }
       }
 
-      if (conf.capture || options.capture) {
+      if (conf.capture || program.capture) {
         console.log('Capture Mode enabled for mocks!');
 
         conf.proxy.onProxyRes = function(proxyRes, req, res) {
@@ -121,8 +124,11 @@ for(var path in config.map) {
 
       app.use(basePath, proxy(conf.proxy));
     } else {
-      if (conf.capture || options.capture) {
+      if (conf.capture || program.capture) {
         console.error('You can not use capture mode without defining a proxy.');
+      }
+      if (conf.disableMocks || program.disableMocks) {
+        console.error('You can not disable mocks without defining a proxy.');
       }
     }
   })(path);
