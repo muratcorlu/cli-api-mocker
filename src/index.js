@@ -47,6 +47,8 @@ try {
   var loadedConfig = require(path.resolve(process.cwd() , 'mock.config.js'));
   console.log('Config file found mocking!');
 
+  config.map = {};
+
   if (config.port === defaultPortValue && loadedConfig.port) {
     config.port = loadedConfig.port;
   }
