@@ -27,6 +27,7 @@ That command will start to serve your mocks on port `9090` by default.
     [-t | --toPath]   with default value ``
     [-c | --capture]   with default value `false`
     [-v | --verbose]   with default value `false`
+    [-d | --disable-mocks] with default value `false`
 
 These arguments are optional. You can use `mockit` command with any one of them or any combination of them.
 
@@ -117,3 +118,20 @@ module.exports = {
 
 When capture mode enabled, if you don't have a mock file for a request and if you have a proxy definition, a mock file will automatically generated for you for successful responses from your origin.
 
+### Disabling mocks
+
+You can also disable mocks to just use it as proxy via `--disable-mocks` cli parameter or `disableMocks` property in config file.
+
+
+```js
+module.exports = {
+    port: 9090,
+    map: {
+        '/api': {
+            target: 'mocks/api',
+            proxy: 'https://api.yourdomain.com',
+            disableMocks: true
+        }
+    }
+}
+```
