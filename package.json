@@ -1,6 +1,6 @@
 {
   "name": "cli-api-mocker",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "CLI wrapper for connect-api-mocker",
   "main": "src/index.js",
   "dependencies": {

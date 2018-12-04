@@ -79,7 +79,7 @@ for(var path in config.map) {
     if (conf.proxy) {
       conf.nextOnNotFound = true;
 
-      if (!conf.disableMocks) {
+      if (!conf.disableMocks && !program.disableMocks) {
         app.use(basePath, apiMocker(conf));
         console.log(`Mocking enabled: ${basePath} => ${conf.target || conf}`);
       }
