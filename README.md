@@ -1,5 +1,7 @@
 # cli-api-mocker
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/muratcorlu/cli-api-mocker.svg)](https://greenkeeper.io/)
+
 CLI wrapper for [connect-api-mocker](https://github.com/muratcorlu/connect-api-mocker)
 
 ## Installation
