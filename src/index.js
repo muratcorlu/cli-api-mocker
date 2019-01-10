@@ -96,24 +96,40 @@ for(var path in config.map) {
 
         conf.proxy.onProxyRes = function(proxyRes, req, res) {
           var body = "";
+          var isBinary = proxyRes.headers['content-type'].indexOf('image/') >= 0 ||
+                         proxyRes.headers['content-type'].indexOf('audio/') >= 0 ||
+                         proxyRes.headers['content-type'].indexOf('video/') >= 0;
+          if(isBinary) {
+            body = [];
+          }
+
           if (proxyRes.statusCode < 404) {
             proxyRes.on('data', function(data) {
-              data = data.toString('utf-8');
-              body += data;
+              if(!isBinary) {
+                body += data.toString('utf-8');
+              } else {
+                body.push(data);
+              }
             });
 
             proxyRes.on('end', function() {
               var requestedFilePath = req.path.replace(new RegExp('^(\/)?' + escapeRegExp(basePath)), '')
               var targetPath = pth.join(conf.target || conf, requestedFilePath);
 
-              var contentType = 'json';
-              if (proxyRes.headers['content-type'].indexOf('xml') > -1) {
-                contentType = 'xml';
-              }
-
               mkdirp.sync(targetPath);
 
-              var targetFile = pth.join(targetPath, req.method + '.' + contentType);
+              var targetFile;
+              if(!isBinary) {
+                var contentType = 'json';
+                if (proxyRes.headers['content-type'].indexOf('xml') > -1) {
+                  contentType = 'xml';
+                }
+                targetFile = pth.join(targetPath, req.method + '.' + contentType);
+              } else {
+                fs.writeFileSync(pth.join(targetPath, req.method + '.raw'), Buffer.concat(body));
+                targetFile = pth.join(targetPath, req.method + '.js');
+                body = rawFileRequestFileHandler(req, proxyRes);
+              }
 
               if (!fs.existsSync(targetFile)) {
                 fs.writeFileSync(targetFile, body);
@@ -139,3 +155,21 @@ for(var path in config.map) {
 app.listen(config.port, function () {
   console.log(`Mocking server is up on ${config.port}`)
 });
+
+const rawFileRequestFileHandler = (req, res) => {
+ const body = `
+var fs = require('fs');
+var path = require('path');
+module.exports = function (request, response) {
+  var filePath = path.join(__dirname, '${req.method}.raw');
+  var stat = fs.statSync(filePath);
+  response.writeHead(200, {
+      'Content-Type': '${res.headers['content-type']}',
+      'Content-Length': stat.size
+  });
+  var readStream = fs.createReadStream(filePath);
+  readStream.pipe(response);
+}
+`;
+  return body;
+}
