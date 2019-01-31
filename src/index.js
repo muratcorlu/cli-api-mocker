@@ -94,6 +94,9 @@ for(var path in config.map) {
       if (conf.capture || program.capture) {
         console.log('Capture Mode enabled for mocks!');
 
+        conf.proxy.onProxyReq = function(proxyReq, req, res) {
+          proxyReq.removeHeader('Accept-Encoding');
+        }
         conf.proxy.onProxyRes = function(proxyRes, req, res) {
           var body = "";
           if (proxyRes.statusCode < 404) {
