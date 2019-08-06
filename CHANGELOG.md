@@ -1,3 +1,10 @@
+## 1.0.8 (2019-08-06)
+
+### Fix:
+
+- CLI Api mocker is not working without proxy.
+
+
 ## 1.0.4 (2018-02-06)
 
 ### Features:
