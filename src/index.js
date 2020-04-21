@@ -37,14 +37,14 @@ mapping[program.fromPath] = {
   target: program.toPath
 };
 
-var  defaultConfig = {
+var defaultConfig = {
   port: program.port,
   map: mapping
 };
 var config = defaultConfig;
 
 try {
-  var loadedConfig = require(path.resolve(process.cwd() , 'mock.config.js'));
+  var loadedConfig = require(path.resolve(process.cwd(), 'mock.config.js'));
   console.log('Config file found mocking!');
 
   config.map = {};
@@ -72,18 +72,20 @@ if (program.verbose) {
 
 app.use(cors());
 
-for(var path in config.map) {
+for (var path in config.map) {
   (function (basePath) {
     var conf = config.map[basePath];
 
     if (conf.proxy) {
       conf.nextOnNotFound = true;
+    }
 
-      if (!conf.disableMocks && !program.disableMocks) {
-        app.use(basePath, apiMocker(conf));
-        console.log(`Mocking enabled: ${basePath} => ${conf.target || conf}`);
-      }
+    if (!conf.disableMocks && !program.disableMocks) {
+      app.use(basePath, apiMocker(conf));
+      console.log(`Mocking enabled: ${basePath} => ${conf.target || conf}`);
+    }
 
+    if (conf.proxy) {
       console.log(`Proxy enabled: ${basePath} => ${conf.proxy}`);
       if (typeof conf.proxy == 'string') {
         conf.proxy = {
@@ -97,15 +99,15 @@ for(var path in config.map) {
         conf.proxy.onProxyReq = function(proxyReq, req, res) {
           proxyReq.removeHeader('Accept-Encoding');
         }
-        conf.proxy.onProxyRes = function(proxyRes, req, res) {
+        conf.proxy.onProxyRes = function (proxyRes, req, res) {
           var body = "";
           if (proxyRes.statusCode < 404) {
-            proxyRes.on('data', function(data) {
+            proxyRes.on('data', function (data) {
               data = data.toString('utf-8');
               body += data;
             });
 
-            proxyRes.on('end', function() {
+            proxyRes.on('end', function () {
               var requestedFilePath = req.path.replace(new RegExp('^(\/)?' + escapeRegExp(basePath)), '')
               var targetPath = pth.join(conf.target || conf, requestedFilePath);
 
