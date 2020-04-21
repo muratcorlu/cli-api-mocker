@@ -70,7 +70,23 @@ if (program.verbose) {
   });
 }
 
-app.use(cors());
+var corsOptionsDelegate = function (req, callback) {
+  var corsOptions = { 
+    origin: true, 
+    credentials: true,
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    preflightContinue: false,
+    optionsSuccessStatus: 204
+  };
+  callback(null, corsOptions);
+};
+
+/*By default "cors()" set the Access-Control-Allow-Origin to "*" which Chrome will reject when the request was made with "credentials" flag enabled. It throws error something like:
+A wildcard '*' cannot be used in the 'Access-Control-Allow-Origin' header when the credentials flag is true. */
+
+app.use(cors(corsOptionsDelegate));
+
+//app.use(cors());
 
 for (var path in config.map) {
   (function (basePath) {
