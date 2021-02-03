@@ -23,6 +23,7 @@ program
   .option('-c, --capture', 'Enable capture mode')
   .option('-v, --verbose', 'Enable verbose mode')
   .option('-d, --disable-mocks', 'Temporary disable mocks to just use proxy')
+  .option('-i, --config-path <config-path>', 'Custom config file path', 'mock.config.js')
   .parse(process.argv);
 
 function escapeRegExp(str) {
@@ -44,8 +45,10 @@ var defaultConfig = {
 var config = defaultConfig;
 
 try {
-  var loadedConfig = require(path.resolve(process.cwd(), 'mock.config.js'));
-  console.log('Config file found mocking!');
+  var configFilePath = path.resolve(process.cwd(), program.configPath);
+  var loadedConfig = require(configFilePath);
+
+  console.log(`Config file found mocking! : ${configFilePath}`);
 
   config.map = {};
 
