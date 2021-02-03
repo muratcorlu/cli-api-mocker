@@ -1,3 +1,9 @@
+## 1.1.0 (2021-02-03)
+
+### Feature:
+
+- Ability to use custom config file instead of `mock.config.js` (Thanks to @cantsdmr)
+
 ## 1.0.8 (2019-08-06)
 
 ### Fix:
