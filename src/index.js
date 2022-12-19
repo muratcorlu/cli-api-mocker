@@ -73,7 +73,15 @@ if (program.verbose) {
   });
 }
 
-app.use(cors());
+var corsOptions = { 
+  origin: true, 
+  credentials: true,
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  preflightContinue: false,
+  optionsSuccessStatus: 204
+};
+
+app.use(cors(corsOptions));
 
 for (var path in config.map) {
   (function (basePath) {
