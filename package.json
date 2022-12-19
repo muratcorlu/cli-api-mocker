@@ -1,6 +1,6 @@
 {
   "name": "cli-api-mocker",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "CLI wrapper for connect-api-mocker",
   "main": "src/index.js",
   "dependencies": {
@@ -27,7 +27,7 @@
     "rest",
     "api"
   ],
-  "author": "Murat Çorlu",
+  "author": "Murat Ã‡orlu",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/muratcorlu/cli-api-mocker/issues"

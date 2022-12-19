@@ -1,3 +1,9 @@
+## 1.1.1 (2022-12-19)
+
+### Fix:
+
+- CORS headers are not working properly on Chrome (#11) (Thanks to @viv3kk)
+
 ## 1.1.0 (2021-02-03)
 
 ### Feature:
